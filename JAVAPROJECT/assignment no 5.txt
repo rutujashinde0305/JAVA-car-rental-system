@@ -1,0 +1,93 @@
+#Assignment 5 Q.1
+from sklearn.linear_model import LinearRegression
+import random
+set_count=100
+set_limit=1000
+train_input=[]
+train_output=[]
+for i in range(set_limit):
+    a=random.randint(0,set_limit)
+    b=random.randint(0,set_limit)
+    c=random.randint(0,set_limit)
+    train_input.append([a,b,c])
+    op=a+(2*b)+(3*c)
+    train_output.append(op)
+print(train_input)
+print(train_output)
+lmodel=LinearRegression()
+lmodel.fit(train_input,train_output)
+acc=lmodel.score(train_input,train_output)
+print("Accuracy=",acc)
+x_test=[[20,50,80]]
+pred=lmodel.predict(x_test)
+print("Pred_value=",pred)
+
+#Q2 
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+import pandas as pd
+int_train=[]
+out_train=[]
+hinfo=pd.read_csv(r"D:\BBA(C.A)\SEM 6\Data Analytics Using Python\PRACTICAL\train.csv")
+hprd=pd.DataFrame(hinfo)
+x=hprd[["UNDER_CONSTRUCTION","RERA","BHK_NO.","SQUARE_FT","READY_TO_MOVE","RESALE"]]
+y=hprd["TARGET(PRICE_IN_LACS)"]
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.9,random_state=1)
+lmodel=LinearRegression()
+lmodel.fit(x_train,y_train)
+acc=lmodel.score(x_train,y_train)
+print("Accurancy of model=",acc)
+pred=lmodel.predict(x_test)
+print("Prediction",pred)
+
+#Q.3
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn import tree
+import pandas as pd
+dset=pd.read_csv(r"D:\BBA(C.A)\SEM 6\Data Analytics Using Python\PRACTICAL\diabetes.csv")
+dbt=pd.DataFrame(dset)
+feat_cols=["Pregnancies","Glucose","BloodPressure","SkinThickness","Insulin","BMI","DiabetesPedigreeFunction","Age"]
+feat_out=["Outcome"]
+x=dbt[feat_cols]
+y=dbt[feat_out]
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.20,random_state=42)
+dtcl=DecisionTreeClassifier()
+dtcl.fit(x_train,y_train)
+acc=dtcl.score(x_train,y_train)
+#print("Acc=",acc)
+dtcl.predict(x_test)
+#print(dtcl)
+tree.plot_tree(dtcl)
+
+#Assignment 5 Q.4
+
+from sklearn.cluster import KMeans
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+
+kdata = pd.read_csv(r"D:\BBA(C.A)\SEM 6\Data Analytics Using Python\PRACTICAL\Kmeans.csv")
+print(kdata.head())
+
+cols = ["Age", "Anuual_income"]
+x = kdata[cols]
+
+wcss_list = []
+
+for i in range(1, 11):
+    kmeans = KMeans(n_clusters=i, init="k-means++", random_state=42)
+    kmeans.fit(x)
+    wcss_list.append(kmeans.inertia_)
+
+plt.plot(range(1, 11), wcss_list)
+plt.title('Elbow Method')
+plt.xlabel('Number of clusters')
+plt.ylabel('WCSS')  # Within cluster sum of squares
+plt.show()
+
+print(wcss_list)
+
+kmeans=KMeans(n_clusters=4,init="k-means++",random_state=42)
+y_predict=kmeans.fit_predict(x)
+print("Data Assigned to clusters=",y_predict)
